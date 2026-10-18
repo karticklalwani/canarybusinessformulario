@@ -3,8 +3,11 @@ export function isEmailConfigured(config) {
 }
 export function templateParams(data) {
   return {
-    business_name: data.business, island: data.location, locality: data.locality,
-    category: data.category, challenge: data.challenge, context: data.context || 'No indicado',
+    business_name: data.requestType === 'early_access' ? '[REGISTRO ANTICIPADO] ' + data.business : data.business,
+    contact_phone: data.phone || '',
+    request_type_label: data.requestLabel || 'Diagnóstico gratuito',
+    request_intro: data.requestType === 'early_access' ? 'Interés en una futura incorporación a Canary One. Registro gratuito, sin compromiso y sin incorporación inmediata.' : 'Solicitud de diagnóstico inicial gratuito de visibilidad, captación y fidelización.', island: data.location, locality: data.locality,
+    category: data.category, challenge: data.challenge, context: [data.context || 'No indicado', 'Tipo: ' + (data.requestLabel || 'Diagnóstico gratuito'), ...Object.entries(data.campaign || {}).map(([key,value]) => key + ': ' + value)].join('\n'),
     contact_name: data.contact, reply_to: data.email, phone: data.phone || 'No indicado',
     consent_text: data.consent.text, consent_at: data.consent.recordedAt,
     consent_version: data.consent.noticeVersion, request_id: data.requestId,
